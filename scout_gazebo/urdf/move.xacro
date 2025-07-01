@@ -25,21 +25,26 @@
     <!-- 控制器 -->
     <gazebo>
   		<plugin name="skid_steer_drive_controller" filename="libgazebo_ros_skid_steer_drive.so">
+        <!-- 基本参数 -->
     		<updateRate>100.0</updateRate>
     		<robotNamespace>/</robotNamespace>
+        <robotBaseFrame>base_link</robotBaseFrame>
+        <!-- 车轮关节配置 -->
     		<leftFrontJoint>front_left_wheel</leftFrontJoint>
     		<rightFrontJoint>front_right_wheel</rightFrontJoint>
     		<leftRearJoint>rear_left_wheel</leftRearJoint>
     		<rightRearJoint>rear_right_wheel</rightRearJoint>
+        <!-- 机械参数 -->
     		<wheelSeparation>${track}</wheelSeparation>
     		<wheelDiameter>${wheel_radius * 2}</wheelDiameter>
-    		<robotBaseFrame>base_link</robotBaseFrame>
     		<torque>20</torque>
+
     		<topicName>cmd_vel</topicName>
     		<broadcastTF>false</broadcastTF>
   		</plugin>
 	</gazebo>
-	
+  
+	<!-- gazebo插件,车轮编码器提供真实的里程计信息  如果使用slam定位则关闭该odom的tf变换 -->
   <gazebo>
     <plugin name="object_controller" filename="libgazebo_ros_planar_move.so">
       <commandTopic>cmd_vel</commandTopic>
@@ -47,6 +52,7 @@
       <odometryFrame>odom</odometryFrame>
       <odometryRate>20.0</odometryRate>
       <robotBaseFrame>base_link</robotBaseFrame>
+      <broadcastTF>false</broadcastTF>
     </plugin>
   </gazebo>
 
