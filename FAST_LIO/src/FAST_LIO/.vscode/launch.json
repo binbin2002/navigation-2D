@@ -1,0 +1,27 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+
+      {
+        "name": "Launch laserMapping node",
+        "type": "cppdbg",
+        "request": "launch",
+        "program": "/home/yang/Desktop/slam_ws/fast_lio/devel/lib/fast_lio/fastlio_mapping",
+        "args": [],
+        "stopAtEntry": false,
+        "cwd": "/home/yang/Desktop/slam_ws/fast_lio",
+        "environment": [],
+        "externalConsole": false,
+        "MIMode": "gdb",
+        "miDebuggerPath": "/usr/bin/gdb",
+        "setupCommands": [
+          {
+            "description": "Enable pretty-printing",
+            "text": "-enable-pretty-printing",
+            "ignoreFailures": true
+          }
+        ]
+      }
+    ]
+  }
+  

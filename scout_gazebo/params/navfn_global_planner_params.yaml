@@ -1,0 +1,11 @@
+#没用
+NavfnROS:
+  visualize_potential: true     # 是否发布可视化路径至Rviz；
+  allow_unknown: false          # 是否穿越未知区域；
+                                #需要设置 track_unknown_space: true，在 obstacle / voxel layer (in costmap_commons_param) 中，使得地图中有未知区域。
+  planner_window_x: 0.0         # x方向的限制（什么含义？）
+  planner_window_y: 0.0         # y方向的限制（什么含义？）
+  
+  default_tolerance: 2.0        # 目标点的容错量，当目标点在障碍物中时，可以有一定的容错。
+                               			 #值越大，搜索时间越长。（是否考虑降低呢？）
+

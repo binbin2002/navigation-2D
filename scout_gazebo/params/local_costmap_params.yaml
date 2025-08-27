@@ -1,0 +1,17 @@
+local_costmap:
+  global_frame: camera_init                    # 全局坐标系，用于局部路径规划的参考框架
+  robot_base_frame: base_link          # 机器人基准坐标系，局部路径规划的起始点
+
+  update_frequency: 7.0                # 局部代价地图的更新频率（内部计算使用）
+  publish_frequency: 7.0               # 局部代价地图的发布频率（Rviz显示使用）
+  static_map: false                    # 是否为静态地图属性，代价地图为动态，设置为否
+  rolling_window: true                 # 是否为滚动窗口（随着机器人移动而滑动）
+  width: 4.0                          # 宽度
+  height: 4.0                         # 高度（长度）
+  resolution: 0.05                    # 栅格地图分辨率
+  transform_tolerance: 1.0            # 订阅tf时的时间差冗余量
+
+  plugins:                            # 局部代价地图使用的地图插件（顺序颠倒会影响效果）
+    - {name: static_layer,        type: "costmap_2d::StaticLayer"}      # 静态地图层
+    - {name: obstacle_layer,      type: "costmap_2d::VoxelLayer"}       # 障碍物层
+    - {name: inflation_layer,     type: "costmap_2d::InflationLayer"}   # 膨胀层

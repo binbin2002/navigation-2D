@@ -1,0 +1,140 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+	
+  <xacro:property name="M_PI" value="3.14159"/> 
+  <xacro:property name="laser_min_range" value="0.1"/>
+  <xacro:property name="laser_max_range" value="200.0"/>
+  <xacro:property name="horizontal_fov" value="70.4"/>
+  <xacro:property name="vertical_fov" value="77.2"/>
+  <xacro:property name="ros_topic" value="scan"/>
+  <xacro:property name="samples" value="24000"/>
+  <xacro:property name="downsample" value="1"/>
+  
+  <xacro:macro name="null_inertial">
+    <inertial>
+      <mass value="0.1"/>
+    <inertia ixx="0.01" ixy="0" ixz="0"
+          iyy="0.01" iyz="0"
+          izz="0.01"/>
+    </inertial>
+  </xacro:macro>
+  <xacro:macro name="Livox_Mid_gazebo_sensor" params="visualize:=True update_rate:=10 resolution:=0.002 noise_mean:=0.0 noise_stddev:=0.01 name:=livox">
+    <gazebo reference="${name}">
+      <sensor type="ray" name="laser_${name}">
+        <pose>0 0 0 0 0 0</pose>
+        <visualize>${visualize}</visualize>
+        <update_rate>${update_rate}</update_rate>
+        <!-- This ray plgin is only for visualization. -->
+        <plugin name="gazebo_ros_laser_controller" filename="liblivox_laser_simulation.so">
+			<ray>
+			  <scan>
+				<horizontal>
+				<samples>100</samples>
+
+				<resolution>1</resolution>
+				<min_angle>${-horizontal_fov/360*M_PI}</min_angle>
+				<max_angle>${horizontal_fov/360*M_PI}</max_angle>
+				</horizontal>
+				<vertical>
+				<samples>50</samples>
+				<resolution>1</resolution>
+				<min_angle>${-vertical_fov/360*M_PI}</min_angle>
+				<max_angle>${vertical_fov/360*M_PI}</max_angle>
+				</vertical>
+			  </scan>
+			  <range>
+				<min>${laser_min_range}</min>
+				<max>${laser_max_range}</max>
+				<resolution>${resolution}</resolution>
+			  </range>
+			  <noise>
+				<type>gaussian</type>
+				<mean>${noise_mean}</mean>
+				<stddev>${noise_stddev}</stddev>
+			  </noise>
+			</ray>
+          <visualize>${visualize}</visualize>
+		  <samples>${samples}</samples>
+		  <downsample>${downsample}</downsample>
+
+		  <csv_file_name>package://livox_laser_simulation/scan_mode/avia.csv</csv_file_name>
+		  <ros_topic>${ros_topic}</ros_topic>
+        </plugin>
+      </sensor>
+    </gazebo>
+  </xacro:macro>
+
+
+  <!-- <gazebo reference="livox_base">    //reference要和laser连杆名称一致
+    <sensor type="ray" name="laser_livox">        //type雷达类型 name起名字
+      <pose>0 0 0 0 0 0</pose>        //6D位姿
+      <visualize>True</visualize>        //雷达射线true可视,false不可视
+      <update_rate>10</update_rate>        //雷达射线更新频率  次/s
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>100</samples>        //采样个数，雷达旋转一周采样数
+            <resolution>1</resolution>        //分辨率,每N个射线测距一次,置大一点设备计算压力小，但是损失精度
+            <min_angle>${-horizontal_fov/360*M_PI}</min_angle>        //采样范围，单位是弧度，以机器人朝向为中心
+            <max_angle>${horizontal_fov/360*M_PI}</max_angle>        //逆时针为正，顺时针为负（看下面演示）
+          </horizontal>
+        </scan>
+
+        <range>
+          <min>0.10</min>        //采样范围   单位  米
+          <max>200.0</max>
+          <resolution>0.002</resolution>         //采样精度
+        </range>
+
+        <noise>        //高斯噪声，数据采集不可能每次都准确
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.01</stddev>
+        </noise>
+      </ray>
+      <plugin name="velodyne_plugin" filename="libgazebo_ros_velodyne_laser.so">
+      <topicName>/scan1</topicName>        //雷达发布的话题！！！
+      <frameName>base_link</frameName>
+      </plugin>
+      <csv_file_name>package://livox_laser_simulation/scan_mode/avia.csv</csv_file_name>
+    </sensor>
+  </gazebo> -->
+
+
+
+
+
+  <xacro:macro name="Livox_AVIA" params="visualize:=True name:=livox">
+    <link name="${name}_base">
+      <xacro:null_inertial/>
+      <visual> 
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://livox_laser_simulation/meshes/0622gyg.dae">
+          </mesh>
+        </geometry>
+      </visual>
+
+      <collision>
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+          <mesh filename="package://livox_laser_simulation/meshes/0622gyg.dae">
+          </mesh>
+          </geometry>
+      </collision>
+    </link>
+    <!-- <link name="${name}">
+      <xacro:null_inertial/>
+    </link>
+
+    <joint name="${name}_to_${name}_base_joint" type="fixed">
+      <parent link="${name}_base"/>
+      <child link="${name}"/>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
+    </joint> -->
+    <xacro:Livox_Mid_gazebo_sensor name="${name}" visualize="${visualize}"/>
+  </xacro:macro>
+    <!-- <xacro:Livox_AVIA name="livox"/>
+  <xacro:include filename="$(find livox_laser_simulation)/urdf/standardrobots_oasis300.xacro"/>
+  <xacro:link_oasis name="oasis"/> -->
+</robot>
