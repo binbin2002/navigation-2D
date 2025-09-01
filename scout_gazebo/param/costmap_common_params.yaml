@@ -4,7 +4,7 @@ robot_radius: 0.4  # Pioneer 3AT机器人半径
 
 # 膨胀参数
 inflation_radius: 0.5  # 膨胀半径
-cost_scaling_factor: 10.0  # 代价缩放因子
+cost_scaling_factor: 3.0  # 代价缩放因子
 
 # 障碍物层参数
 obstacle_range: 4.0  # 障碍物检测范围
